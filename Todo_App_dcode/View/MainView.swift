@@ -11,13 +11,16 @@ struct MainView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var listviewmodel: ListViewModel
-
     
+    // Default value for each task
     @State var date = Date()
     @State var textFieldText: String = ""
     @State var descFieldText: String = ""
     @State var showingAlert: Bool = false
+    
+    // Alert box for adding
     @State private var showingAdd = false
+    // Controll view by this index
     @State  var selectionIndex = 0
     
     
@@ -116,26 +119,26 @@ struct MainView: View {
     func saveButtonTapped(){
         showingAlert = true
         listviewmodel.addItem(title: textFieldText, desc: descFieldText, date: date)
-        //        listviewmodel.addItem(title: textFieldText, desc: descFieldText, date: self.date)
+        cleanUpSpace()
     }
     func setSelection(){
         self.selectionIndex = 1
     }
 }
 
-struct SheetPresenter<Content>: View where Content: View {
-    @Binding var presentingSheet: Bool
-    var content: Content
-    var body: some View {
-        ListView()
-            .sheet(isPresented: self.$presentingSheet, content: { self.content })
-            .onAppear {
-                DispatchQueue.main.async {
-                    self.presentingSheet = true
-                }
-            }
-    }
-}
+//struct SheetPresenter<Content>: View where Content: View {
+//    @Binding var presentingSheet: Bool
+//    var content: Content
+//    var body: some View {
+//        ListView()
+//            .sheet(isPresented: self.$presentingSheet, content: { self.content })
+//            .onAppear {
+//                DispatchQueue.main.async {
+//                    self.presentingSheet = true
+//                }
+//            }
+//    }
+//}
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
