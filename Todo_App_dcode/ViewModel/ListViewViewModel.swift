@@ -26,11 +26,18 @@ class ListViewModel: ObservableObject{
         items.append(new_item)
     }
     
+    func move(from: IndexSet, to: Int){
+        items.move(fromOffsets: from, toOffset: to)
+    }
+    
     func update(item: ItemModel){
         if let index = items.firstIndex(where: {$0.id == item.id}){
             items[index] = item.updateCompleted()
         }
     }
+//    func edit(indexSet: IndexSet){
+//        items[indexSet] = ItemModel(Title: <#T##String#>, Description: <#T##String#>, IsCompleted: <#T##Bool#>, Date: <#T##Date#>)
+//    }
     
     func delete(indexSet: IndexSet){
         items.remove(atOffsets: indexSet)

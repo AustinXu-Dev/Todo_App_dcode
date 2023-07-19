@@ -17,9 +17,8 @@ struct MainView: View {
     @State var textFieldText: String = ""
     @State var descFieldText: String = ""
     @State var showingAlert: Bool = false
-    
-    // Alert box for adding
-    @State private var showingAdd = false
+    @State var alertTitle: String = ""
+    @State var validText: Bool = false
     // Controll view by this index
     @State  var selectionIndex = 0
     
@@ -75,30 +74,15 @@ struct MainView: View {
                                 .bold()
                             }
                         }
-                    }.alert(isPresented: $showingAlert) {
-                        Alert(title: Text("Task Saved"), primaryButton: .default(
-                            Text("Go To Home"), action: goToHome
-                        ),
-                              secondaryButton: .default(
-                            Text("Ok"), action: cleanUpSpace
-                        ))
-                    
-                }.background(.white)
+                }.alert(isPresented: $showingAlert, content: getSaveAlert)
+                    .background(.white)
                     .padding(0)
                     .navigationTitle("New Task")
             }
-                .tabItem{
-                    Label("Add", systemImage: "plus.circle.fill")
-                }.tag(2)
+            .tabItem{
+                Label("Add", systemImage: "plus.circle.fill")
+            }.tag(2)
                 
-//            SheetPresenter(presentingSheet: $showingAdd, content: AddView())
-//                .tabItem {
-//                    VStack {
-//                        Image(systemName: "plus.circle.fill")
-//                        Text("Add")
-//                    }
-//                }
-//
             ProfileView()
                 .tabItem{
                     Label("Profile", systemImage: "ellipsis")
@@ -117,9 +101,41 @@ struct MainView: View {
     }
     
     func saveButtonTapped(){
-        showingAlert = true
-        listviewmodel.addItem(title: textFieldText, desc: descFieldText, date: date)
-        cleanUpSpace()
+        if textIsValid(){
+            showingAlert = true
+            listviewmodel.addItem(title: textFieldText, desc: descFieldText, date: date)
+            cleanUpSpace()
+        }
+        
+    }
+    func textIsValid() -> Bool {
+        if textFieldText.count < 3 {
+            alertTitle = "Text should contain atleast 3 characters"
+            showingAlert.toggle()
+            return false
+        }
+        else if descFieldText.count < 3{
+            alertTitle = "Description should contain atleast 3 characters"
+            showingAlert.toggle()
+            return false
+        }
+        validText = true
+        return true
+    }
+    
+    
+    func getSaveAlert() -> Alert{
+        if validText{
+            return Alert(title: Text("Task Saved"), primaryButton: .destructive(
+                Text("Cancel"), action: cleanUpSpace
+            ),
+                  secondaryButton: .default(
+                Text("Ok"), action: goToHome
+            ))
+        } else{
+            return Alert(title: Text(alertTitle))
+        }
+        
     }
     func setSelection(){
         self.selectionIndex = 1

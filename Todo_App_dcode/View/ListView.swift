@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ListView: View {
     @EnvironmentObject var listviewmodel: ListViewModel
+    @State var isPresented = false
     
     var body: some View {
         
@@ -28,22 +29,25 @@ struct ListView: View {
                             Text("Due at: \(item.dueDate.formatted(date: .numeric, time: .standard))")
                                 .font(.body)
                                 .foregroundColor(.gray)
-                            
+                                .lineLimit(1)
                         }
                         Spacer()
                         Image(systemName: item.isCompleted ? "checkmark.circle" : "xmark.circle")
                             .foregroundColor(item.isCompleted ? .green : .red)
                             .font(.system(size: 30))
-                    }.onTapGesture {
-                        withAnimation(.easeIn){
-                            listviewmodel
-                                .update(item: item)
-                        }
+                            .onTapGesture {
+                                withAnimation(.easeIn){
+                                    listviewmodel
+                                        .update(item: item)
+                                }
+                            }
                     }
-
                 }.onDelete(perform: listviewmodel.delete) // Delete Function of each stack
+                    .onMove(perform: listviewmodel.move)
             }.listStyle(.sidebar)
                 .navigationTitle("To Do List")
+                .navigationBarItems(leading: EditButton())
+                
         }
     }
 }
