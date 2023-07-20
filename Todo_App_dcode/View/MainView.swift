@@ -19,13 +19,12 @@ struct MainView: View {
     @State var showingAlert: Bool = false
     @State var alertTitle: String = ""
     @State var validText: Bool = false
+    
     // Controll view by this index
-    @State  var selectionIndex = 0
-    
-    
-    
+    @State var selectionIndex = 0
     var body: some View {
         TabView(selection: $selectionIndex){
+            // View for home
             if listviewmodel.items.isEmpty{
                 NoListView()
                     .tabItem {
@@ -77,28 +76,33 @@ struct MainView: View {
                 }.alert(isPresented: $showingAlert, content: getSaveAlert)
                     .background(.white)
                     .padding(0)
-                    .navigationTitle("New Task")
+                    .navigationTitle("Add New Task")
             }
             .tabItem{
                 Label("Add", systemImage: "plus.circle.fill")
             }.tag(2)
-                
+            
+            // View for profile
             ProfileView()
                 .tabItem{
-                    Label("Profile", systemImage: "ellipsis")
+                    Label("Profile", systemImage: "person")
                 }.tag(3)
             
             
         }.environmentObject(ListViewModel())
     }
+     
+    // clean up after task
     func cleanUpSpace(){
         self.textFieldText = ""
         self.descFieldText = ""
         self.date = Date()
     }
+    // Return back to home by selection index
     func goToHome(){
         selectionIndex = 1
     }
+    
     
     func saveButtonTapped(){
         if textIsValid(){
@@ -108,6 +112,8 @@ struct MainView: View {
         }
         
     }
+    
+    // Check validatin of text
     func textIsValid() -> Bool {
         if textFieldText.count < 3 {
             alertTitle = "Text should contain atleast 3 characters"
@@ -123,7 +129,7 @@ struct MainView: View {
         return true
     }
     
-    
+    // Get alert based on condition
     func getSaveAlert() -> Alert{
         if validText{
             return Alert(title: Text("Task Saved"), primaryButton: .destructive(
@@ -136,9 +142,6 @@ struct MainView: View {
             return Alert(title: Text(alertTitle))
         }
         
-    }
-    func setSelection(){
-        self.selectionIndex = 1
     }
 }
 

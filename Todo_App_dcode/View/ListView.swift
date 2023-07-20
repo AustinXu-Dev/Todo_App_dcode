@@ -41,9 +41,16 @@ struct ListView: View {
                                         .update(item: item)
                                 }
                             }
-                    }
+                    }.swipeActions(edge: .leading, allowsFullSwipe: true){
+                        Button(action: {listviewmodel.update(item: item)}) {
+                            Label("Done", systemImage: "checkmark.circle")
+                        }
+                    }.tint(.green)
+                    
                 }.onDelete(perform: listviewmodel.delete) // Delete Function of each stack
-                    .onMove(perform: listviewmodel.move)
+                    .onMove(perform: listviewmodel.move) // Move Fun
+                    
+                    
             }.listStyle(.sidebar)
                 .navigationTitle("To Do List")
                 .navigationBarItems(leading: EditButton())
